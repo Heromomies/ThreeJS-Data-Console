@@ -1,12 +1,12 @@
 
 
-const scene = new THREE.Scene();
+
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
-        const controls = new OrbitControls(camera, renderer.domElement);
+        controls = new THREE.OrbitControls (camera, renderer.domElement);
       
        
        
@@ -23,14 +23,25 @@ const scene = new THREE.Scene();
         
         camera.position.z = 8;
       
-        createSphere();
+      
 
-        function animate() {
-            requestAnimationFrame( animate );
-            renderer.render( scene, camera );
-            circle.rotation.x += 0.01;
-            circle.rotation.y += 0.01;
-            circle.rotation.z += 0.03;
-        }
-        animate();
         
+        function createLights() {
+            // Create a directional light
+            const mainLight = new THREE.PointLight(0xffffff, 22.0);
+    
+    
+            // remember to add the light to the scene
+            scene.add( mainLight);
+        }
+        function init() {
+          
+    
+            // Set the background color
+            scene.background = new THREE.Color('#00DDDC');
+            createSphere();
+           // createCamera();
+            createLights();
+            renderer.render( scene, camera );
+        }
+        init();
