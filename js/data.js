@@ -5,7 +5,13 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 var controls;
 
+const gameData = dataJSON;
 
+
+
+gameData.forEach((value) => {
+    console.log(value["Genre"]);
+})
 
 const sphereWidth = 2;
 const sphereHeight = 16;
@@ -14,7 +20,7 @@ const sphereDepth = 16;
 const geometry = new THREE.SphereGeometry(sphereWidth, sphereHeight, sphereDepth);
 
 function createSphere(geometry, color, x) {
-  
+
     const material = new THREE.MeshBasicMaterial({
         color: color
     });
@@ -29,9 +35,9 @@ function createSphere(geometry, color, x) {
 camera.position.z = 8;
 
 const spheres = [
-    createSphere(geometry, 0x44aa88,  0),
+    createSphere(geometry, 0x44aa88, 0),
     createSphere(geometry, 0x8844aa, -5),
-    createSphere(geometry, 0xaa8844,  5),
+    createSphere(geometry, 0xaa8844, 5),
 ];
 
 function createCamera() {
@@ -39,7 +45,7 @@ function createCamera() {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.rotateSpeed = 0.1;
-    
+
 }
 
 function createLights() {
@@ -50,21 +56,22 @@ function createLights() {
     // add the light to the scene
     scene.add(mainLight);
 }
-function animate(){
 
-requestAnimationFrame(animate)
-controls.update();
-renderer.render(scene, camera);
+function animate() {
+
+    requestAnimationFrame(animate)
+    controls.update();
+    renderer.render(scene, camera);
 }
 
 function init() {
 
     // Set the background color
     scene.background = new THREE.Color('#3c415c');
-    
+
     createCamera();
     createLights();
-   
+
 }
 init();
 animate();

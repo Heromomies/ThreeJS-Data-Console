@@ -1,4 +1,7 @@
-[
+
+
+
+const dataJSON = [
   {
     "No.": 85,
     "Game": "Star Wars: Episode III – Revenge of the Sith",
