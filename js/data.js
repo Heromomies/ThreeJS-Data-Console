@@ -7,12 +7,19 @@ var controls;
 
 const gameData = dataJSON;
 
-
+const genres= {};
 
 gameData.forEach((value) => {
-    console.log(value["Genre"]);
+    var genre = value["Genre"];
+    console.log(genre)
+    if (genre = "Action"){
+        genres["Action"] = 1;
+        genres[genre] = genres[genre] +1;
+    }
+   
+  
 })
-
+console.log(genres);
 const sphereWidth = 2;
 const sphereHeight = 16;
 const sphereDepth = 16;
