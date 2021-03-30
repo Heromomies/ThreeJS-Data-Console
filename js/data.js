@@ -9,7 +9,6 @@ const gameData = dataJSON;
 
 const genres = {};
 
-//var highlightColor = new THREE.color("blue");
 
 var raycaster;
 var mouse;
@@ -18,7 +17,7 @@ genres["action"] = 0;
 
 
 
-
+//let text = [];
 //RAYCASTER
 raycaster = new THREE.Raycaster();
 mouse = new THREE.Vector2(1, 1);
@@ -37,6 +36,28 @@ function onDocumentMouseMove(event) {
 }
 
 
+/*const loader = new THREE.FontLoader();*/
+
+/*loader.load( 'json/PerfectDOSVGA437_Regular.json', function ( font ) {
+
+	const geometry = new THREE.TextGeometry( 'Hello three.js!', {
+		font: font,
+		size: 800,
+		height: 5,
+		curveSegments: 12,
+		bevelEnabled: true,
+		bevelThickness: 10,
+		bevelSize: 8,
+		bevelOffset: 0,
+		bevelSegments: 5,
+        
+	} 
+    
+    
+    );
+    text.push(geometry);
+}
+ );*/
 
 
 
@@ -70,10 +91,6 @@ function SpawnSphere() {
 
 
 
-
-
-console.log(genres);
-console.log(planets);
 
 function generateRandomColor() {
     var randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
@@ -139,18 +156,18 @@ function init() {
 }
 
 function render() {
-    // calculate objects intersecting the picking ray
+
     raycaster.setFromCamera(mouse, camera);
 
     var intersects = raycaster.intersectObjects(scene.children);
-    console.log(intersects);
+
 
     for (const planet of planets) {
         let isFound = false;
         for (const planet2 of intersects) {
-
+            //Si la planet est correspond
             if (planet === planet2.object) {
-                planet.material.color.set(0xff0000);
+                planet.material.color.set(0x000000);
                 isFound = true;
             }
 
