@@ -6,9 +6,7 @@ document.body.appendChild(renderer.domElement);
 var controls;
 
 const gameData = dataJSON;
-const sphereWidth = 2;
-const sphereHeight = 16;
-const sphereDepth = 16;
+
 const genres = {};
 
 genres["action"] = 0;
@@ -25,20 +23,34 @@ gameData.forEach((value) => {
             genres[genre] = 0;
         }
         genres[genre] = genres[genre] + 1;
+        
+        const sphereWidth = genres[genre];
+        const sphereHeight = genres[genre];
+        const sphereDepth = 16;
+    
+        const geometry = new THREE.SphereGeometry(sphereWidth, sphereHeight, sphereDepth);
+        
+        createSphere(geometry, generateRandomColor(), getRandomIntInclusive(100, 500), getRandomIntInclusive(100, 500));
     }
-    const geometry = new THREE.SphereGeometry(sphereWidth, sphereHeight, sphereDepth);
-
+  
 })
 console.log(genres);
 
+function generateRandomColor()
+{
+    var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+    return randomColor;
+    //random color will be freshly served
+}
+
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
 
-
-
-
-
-
-function createSphere(geometry, color, x) {
+function createSphere(geometry, color, x, z) {
 
     const material = new THREE.MeshBasicMaterial({
         color: color
@@ -46,18 +58,13 @@ function createSphere(geometry, color, x) {
     const sphere = new THREE.Mesh(geometry, material);
 
     scene.add(sphere);
-    sphere.position.set(2, 1, 1);
+    sphere.position.set(2, 1, z);
     sphere.position.x = x;
     return sphere;
 }
 
-camera.position.z = 8;
+camera.position.z = 500;
 
-const spheres = [
-    createSphere(geometry, 0x44aa88, 0),
-    createSphere(geometry, 0x8844aa, -5),
-    createSphere(geometry, 0xaa8844, 5),
-];
 
 function createCamera() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
