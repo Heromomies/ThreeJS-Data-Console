@@ -9,36 +9,74 @@ const gameData = dataJSON;
 
 const genres = {};
 
+//var highlightColor = new THREE.color("blue");
+
+var raycaster;
+var mouse;
+var INTERSECTED;
 genres["action"] = 0;
-gameData.forEach((value) => {
-    var genre = value["Genre"].toLowerCase();
-    if (genre === "") {
-        return;
-    }
 
-    if (genre.startsWith("action")) {
-        genres["action"] = genres["action"] + 1;
-    } else {
-        if (genres[genre] === undefined) {
-            genres[genre] = 0;
+
+
+
+//RAYCASTER
+raycaster = new THREE.Raycaster();
+mouse = new THREE.Vector2(1, 1);
+
+let planets = [];
+
+function onDocumentMouseMove(event) {
+    // the following line would stop any other event handler from firing
+    // (such as the mouse's TrackballControls)
+    event.preventDefault();
+
+    // update the mouse variable
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+}
+
+
+
+
+
+
+function SpawnSphere() {
+    gameData.forEach((value) => {
+        var genre = value["Genre"].toLowerCase();
+        if (genre === "") {
+            return;
         }
-        genres[genre] = genres[genre] + 1;
-        
-        const sphereWidth = genres[genre];
-        const sphereHeight = genres[genre];
-        const sphereDepth = 16;
-    
-        const geometry = new THREE.SphereGeometry(sphereWidth, sphereHeight, sphereDepth);
-        
-        createSphere(geometry, generateRandomColor(), getRandomIntInclusive(100, 500), getRandomIntInclusive(100, 500));
-    }
-  
-})
-console.log(genres);
 
-function generateRandomColor()
-{
-    var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+        if (genre.startsWith("action")) {
+            genres["action"] = genres["action"] + 1;
+        } else {
+            if (genres[genre] === undefined) {
+                genres[genre] = 0;
+            }
+            genres[genre] = genres[genre] + 1;
+
+            const sphereWidth = genres[genre];
+            const sphereHeight = genres[genre];
+            const sphereDepth = 16;
+
+            const geometry = new THREE.SphereGeometry(sphereWidth, sphereHeight, sphereDepth);
+
+            planets.push(createSphere(geometry, generateRandomColor(), getRandomIntInclusive(100, 500), getRandomIntInclusive(100, 500), getRandomIntInclusive(100, 500)));
+        }
+
+    })
+}
+
+
+
+
+
+console.log(genres);
+console.log(planets);
+
+function generateRandomColor() {
+    var randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
     return randomColor;
     //random color will be freshly served
 }
@@ -47,10 +85,10 @@ function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+}
 
 
-function createSphere(geometry, color, x, z) {
+function createSphere(geometry, color, x, y, z) {
 
     const material = new THREE.MeshBasicMaterial({
         color: color
@@ -58,8 +96,8 @@ function createSphere(geometry, color, x, z) {
     const sphere = new THREE.Mesh(geometry, material);
 
     scene.add(sphere);
-    sphere.position.set(2, 1, z);
-    sphere.position.x = x;
+    sphere.position.set(x, y, z);
+    sphere.userData.originalColor = color;
     return sphere;
 }
 
@@ -70,7 +108,7 @@ function createCamera() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.rotateSpeed = 0.;
+    controls.rotateSpeed = 0.3;
 
 }
 
@@ -87,6 +125,7 @@ function animate() {
 
     requestAnimationFrame(animate)
     controls.update();
+    render();
     renderer.render(scene, camera);
 }
 
@@ -94,10 +133,36 @@ function init() {
 
     // Set the background color
     scene.background = new THREE.Color('#3c415c');
-
     createCamera();
     createLights();
 
 }
+
+function render() {
+    // calculate objects intersecting the picking ray
+    raycaster.setFromCamera(mouse, camera);
+
+    var intersects = raycaster.intersectObjects(scene.children);
+    console.log(intersects);
+
+    for (const planet of planets) {
+        let isFound = false;
+        for (const planet2 of intersects) {
+
+            if (planet === planet2.object) {
+                planet.material.color.set(0xff0000);
+                isFound = true;
+            }
+
+        }
+        if (!isFound) {
+            planet.material.color.set(planet.userData.originalColor);
+        }
+    }
+}
+
+
 init();
 animate();
+SpawnSphere();
+window.addEventListener('mousemove', onDocumentMouseMove, false);
