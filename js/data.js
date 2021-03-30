@@ -6,25 +6,37 @@ document.body.appendChild(renderer.domElement);
 var controls;
 
 const gameData = dataJSON;
-
-const genres= {};
-
-gameData.forEach((value) => {
-    var genre = value["Genre"];
-    console.log(genre)
-    if (genre = "Action"){
-        genres["Action"] = 1;
-        genres[genre] = genres[genre] +1;
-    }
-   
-  
-})
-console.log(genres);
 const sphereWidth = 2;
 const sphereHeight = 16;
 const sphereDepth = 16;
+const genres = {};
 
-const geometry = new THREE.SphereGeometry(sphereWidth, sphereHeight, sphereDepth);
+genres["action"] = 0;
+gameData.forEach((value) => {
+    var genre = value["Genre"].toLowerCase();
+    if (genre === "") {
+        return;
+    }
+
+    if (genre.startsWith("action")) {
+        genres["action"] = genres["action"] + 1;
+    } else {
+        if (genres[genre] === undefined) {
+            genres[genre] = 0;
+        }
+        genres[genre] = genres[genre] + 1;
+    }
+    const geometry = new THREE.SphereGeometry(sphereWidth, sphereHeight, sphereDepth);
+
+})
+console.log(genres);
+
+
+
+
+
+
+
 
 function createSphere(geometry, color, x) {
 
@@ -51,7 +63,7 @@ function createCamera() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.rotateSpeed = 0.1;
+    controls.rotateSpeed = 0.;
 
 }
 
